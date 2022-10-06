@@ -149,6 +149,70 @@ void setup() {
     request->send_P(200, "text/plain",getRSSI().c_str());
   });
 
+  //-----------------------------------------------------------------
+  // Teclas del piano
+  // Tecla 1
+  server.on("/TECLA1", HTTP_GET, [](AsyncWebServerRequest *request){
+    Serial.println("Tecla 1 presionada");
+    //request->send_P(200, "text/plain",getRSSI().c_str());
+  });
+  // Tecla 2
+  server.on("/TECLA2", HTTP_GET, [](AsyncWebServerRequest *request){
+    Serial.println("Tecla 2 presionada");
+    //request->send_P(200, "text/plain",getRSSI().c_str());
+  });
+  // Tecla 3
+  server.on("/TECLA3", HTTP_GET, [](AsyncWebServerRequest *request){
+    Serial.println("Tecla 3 presionada");
+    //request->send_P(200, "text/plain",getRSSI().c_str());
+  });
+  // Tecla 4
+  server.on("/TECLA4", HTTP_GET, [](AsyncWebServerRequest *request){
+    Serial.println("Tecla 4 presionada");
+    //request->send_P(200, "text/plain",getRSSI().c_str());
+  });
+  // Tecla 5
+  server.on("/TECLA5", HTTP_GET, [](AsyncWebServerRequest *request){
+    Serial.println("Tecla 5 presionada");
+    //request->send_P(200, "text/plain",getRSSI().c_str());
+  });
+  // Tecla 6
+  server.on("/TECLA6", HTTP_GET, [](AsyncWebServerRequest *request){
+    Serial.println("Tecla 6 presionada");
+    //request->send_P(200, "text/plain",getRSSI().c_str());
+  });
+  // Tecla 7
+  server.on("/TECLA7", HTTP_GET, [](AsyncWebServerRequest *request){
+    Serial.println("Tecla 7 presionada");
+    //request->send_P(200, "text/plain",getRSSI().c_str());
+  });
+  // Tecla 8
+  server.on("/TECLA8", HTTP_GET, [](AsyncWebServerRequest *request){
+    Serial.println("Tecla 8 presionada");
+    //request->send_P(200, "text/plain",getRSSI().c_str());
+  });
+  // Tecla 9
+  server.on("/TECLA9", HTTP_GET, [](AsyncWebServerRequest *request){
+    Serial.println("Tecla 9 presionada");
+    //request->send_P(200, "text/plain",getRSSI().c_str());
+  });
+  // Tecla 10
+  server.on("/TECLA10", HTTP_GET, [](AsyncWebServerRequest *request){
+    Serial.println("Tecla 10 presionada");
+    //request->send_P(200, "text/plain",getRSSI().c_str());
+  });
+  // Tecla 11
+  server.on("/TECLA11", HTTP_GET, [](AsyncWebServerRequest *request){
+    Serial.println("Tecla 11 presionada");
+    //request->send_P(200, "text/plain",getRSSI().c_str());
+  });
+  // Tecla 12
+  server.on("/TECLA12", HTTP_GET, [](AsyncWebServerRequest *request){
+    Serial.println("Tecla 12 presionada");
+    //request->send_P(200, "text/plain",getRSSI().c_str());
+  });
+  //-----------------------------------------------------------------
+
   events.onConnect([](AsyncEventSourceClient *client){
     if(client->lastId()){
       Serial.printf("Client reconnected! Last message ID that it got is: %u\n", client->lastId());
@@ -165,9 +229,10 @@ void setup() {
 
 void loop() {
   potVal = analogRead(potPin); // Lectura del dato del ADC
+  Serial.print("Lectura del ADC: ");
   Serial.println(potVal);      // Print potVal en serial monitor
   
-  if (potVal < 2047) { // ADC menor a 2047 reproduce melodia 1
+  /*if (potVal < 2047) { // ADC menor a 2047 reproduce melodia 1
     for ( i=0; i<MAX_COUNT1; i++) {
       toneM = melody1[i];
       beat = beats1[i];
@@ -184,6 +249,6 @@ void loop() {
         playTone(); // A pause between notes
         delayMicroseconds(pauses);
         }
-     } 
+     } */
    delay(200);
 }
