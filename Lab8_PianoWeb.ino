@@ -95,6 +95,7 @@ void setup() {
     ledcWrite(channel, 125);
     ledcWriteTone(channel, 261);
     delay(1000);
+    ledcWriteTone(channel, 0);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   // Tecla 2
@@ -103,6 +104,7 @@ void setup() {
     ledcWrite(channel, 125);
     ledcWriteTone(channel, 277);
     delay(1000);
+    ledcWriteTone(channel, 0);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   // Tecla 3
@@ -111,6 +113,7 @@ void setup() {
     ledcWrite(channel, 125);
     ledcWriteTone(channel, 293);
     delay(1000);
+    ledcWriteTone(channel, 0);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   // Tecla 4
@@ -119,6 +122,7 @@ void setup() {
     ledcWrite(channel, 125);
     ledcWriteTone(channel, 311);
     delay(1000);
+    ledcWriteTone(channel, 0);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   // Tecla 5
@@ -127,6 +131,7 @@ void setup() {
     ledcWrite(channel, 125);
     ledcWriteTone(channel, 329);
     delay(1000);
+    ledcWriteTone(channel, 0);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   // Tecla 6
@@ -135,6 +140,7 @@ void setup() {
     ledcWrite(channel, 125);
     ledcWriteTone(channel, 349);
     delay(1000);
+    ledcWriteTone(channel, 0);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   // Tecla 7
@@ -143,6 +149,7 @@ void setup() {
     ledcWrite(channel, 125);
     ledcWriteTone(channel, 369);
     delay(1000);
+    ledcWriteTone(channel, 0);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   // Tecla 8
@@ -151,6 +158,7 @@ void setup() {
     ledcWrite(channel, 125);
     ledcWriteTone(channel, 392);
     delay(1000);
+    ledcWriteTone(channel, 0);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   // Tecla 9
@@ -159,6 +167,7 @@ void setup() {
     ledcWrite(channel, 125);
     ledcWriteTone(channel, 415);
     delay(1000);
+    ledcWriteTone(channel, 0);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   // Tecla 10
@@ -167,6 +176,7 @@ void setup() {
     ledcWrite(channel, 125);
     ledcWriteTone(channel, 440);
     delay(1000);
+    ledcWriteTone(channel, 0);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   // Tecla 11
@@ -175,6 +185,7 @@ void setup() {
     ledcWrite(channel, 125);
     ledcWriteTone(channel, 466);
     delay(1000);
+    ledcWriteTone(channel, 0);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   // Tecla 12
@@ -183,6 +194,7 @@ void setup() {
     ledcWrite(channel, 125);
     ledcWriteTone(channel, 493);
     delay(1000);
+    ledcWriteTone(channel, 0);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   //-----------------------------------------------------------------
@@ -203,9 +215,6 @@ void setup() {
 
 void loop() {
 
-  Serial.print("Lectura del ADC: ");
-
-  ledcWriteTone(channel, 2000);
   
   /*if (potVal < 2047) { // ADC menor a 2047 reproduce melodia 1
     for ( i=0; i<MAX_COUNT1; i++) {
