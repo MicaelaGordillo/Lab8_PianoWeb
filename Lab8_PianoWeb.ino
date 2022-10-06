@@ -1,7 +1,14 @@
+#include <Arduino.h>
+#include <WiFi.h>
 #include <ESPAsyncWebServer.h>
+#include "SPIFFS.h"
+#include "config.h"
 
 // Creamos el servidor AsyncWebServer en el puerto 80
 AsyncWebServer server(80);
+
+// Create an Event Source on /events
+AsyncEventSource events("/events");
 
 // Star Wars TONES //
 // Definiendo la relacion entre note, period & frequency. 
@@ -70,10 +77,91 @@ void playTone() {
   }                         
 }
 
+// Inicializando LittleFS
+void initFS() {
+ // Iniciamos  SPIFFS
+  if(!SPIFFS.begin())
+     { Serial.println("ha ocurrido un error al montar SPIFFS");
+       return; }
+}
+
+// Inicializando WiFi
+void initWiFi() {
+// conectamos al Wi-Fi
+  WiFi.begin(ssid, password);
+  // Mientras no se conecte, mantenemos un bucle con reintentos sucesivos
+  while (WiFi.status() != WL_CONNECTED) {
+      delay(1000);
+      // Esperamos un segundo
+      Serial.println("Conectando a la red WiFi..");
+    }
+  Serial.println();
+  Serial.println(WiFi.SSID());
+  Serial.print("Direccion IP:\t");
+  // Imprimimos la ip que le ha dado nuestro router
+  Serial.println(WiFi.localIP());
+}
+String getRSSI(){
+  return String(WiFi.RSSI());
+}
+String processor(const String& var){
+    Serial.print(var+" : ");
+    if (var == "IP"){
+      return String(WiFi.localIP().toString().c_str());
+    }
+    else if (var == "HOSTNAME"){
+      return String(WiFi.getHostname());
+    }
+    else if (var == "STATUS"){
+      return String(WiFi.status());
+    }
+    else if (var == "SSID"){
+      return String(WiFi.SSID().c_str());
+    }
+    else if (var == "PSK"){
+      return String(WiFi.psk().c_str());
+    }
+    else if (var == "BSSID"){
+      return String(WiFi.BSSIDstr().c_str());
+    }
+    else if (var == "RSSI"){
+      return String(WiFi.RSSI());
+    }
+}
+
 void setup() { 
-    pinMode(speakerOut, OUTPUT);
-    Serial.begin(115200); // Set serial out if we want debugging
-  } 
+  pinMode(speakerOut, OUTPUT);
+  Serial.begin(115200); // Set serial out if we want debugging
+
+  initWiFi();
+  initFS();
+
+   // Ruta para cargar el archivo index.html
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
+
+
+  server.serveStatic("/", SPIFFS, "/");
+
+  // Ruta para poner el GPIO alto
+  server.on("/RSSI", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain",getRSSI().c_str());
+  });
+
+  events.onConnect([](AsyncEventSourceClient *client){
+    if(client->lastId()){
+      Serial.printf("Client reconnected! Last message ID that it got is: %u\n", client->lastId());
+    }
+    // send event with message "hello!", id current millis
+    // and set reconnect delay to 1 second
+    client->send("hello!", NULL, millis(), 10000);
+  });
+  server.addHandler(&events);
+
+  // Start server
+  server.begin();
+} 
 
 void loop() {
   potVal = analogRead(potPin); // Lectura del dato del ADC
