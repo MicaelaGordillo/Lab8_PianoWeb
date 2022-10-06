@@ -10,72 +10,9 @@ AsyncWebServer server(80);
 // Create an Event Source on /events
 AsyncEventSource events("/events");
 
-// Star Wars TONES //
-// Definiendo la relacion entre note, period & frequency. 
-// periodo en un microsegundo P = 1/f * (1E6)
-#define  c3    7634
-#define  d3    6803
-#define  e3    6061
-#define  f3    5714
-#define  g3    5102
-#define  a3    4545
-#define  b3    4049
-#define  c4    3816    // 261 Hz 
-#define  d4    3401    // 294 Hz 
-#define  e4    3030    // 329 Hz 
-#define  f4    2865    // 349 Hz 
-#define  g4    2551    // 392 Hz 
-#define  a4    2272    // 440 Hz 
-#define  a4s   2146
-#define  b4    2028    // 493 Hz 
-#define  c5    1912    // 523 Hz
-#define  d5    1706
-#define  d5s   1608
-#define  e5    1517    // 659 Hz
-#define  f5    1433    // 698 Hz
-#define  g5    1276
-#define  a5    1136
-#define  a5s   1073
-#define  b5    1012
-#define  c6    955
- 
-#define  R     0      // Definiendo la nota especial, 'R', to represent a rest
- 
-int speakerOut = 18;    
-int potPin = A0;      // entrada analogica
- 
-// Melody 1: Star Wars Marcha imperial
-int melody1[] = {  a4, R,  a4, R,  a4, R,  f4, R, c5, R,  a4, R,  f4, R, c5, R, a4, R,  e5, R,  e5, R,  e5, R,  f5, R, c5, R,  g5, R,  f5, R,  c5, R, a4,  R, R  };
-int beats1[]  = {  50, 20, 50, 20, 50, 20, 40, 5, 20, 5,  60, 10, 40, 5, 20, 5, 60, 80, 50, 20, 50, 20, 50, 20, 40, 5, 20, 5,  60, 10, 40, 5,  20, 5, 60, 40, 300};
-// Melody 2: Star Wars
-int melody2[] = {  f4,  f4, f4,  a4s,   f5,  d5s,  d5,  c5, a5s, f5, d5s,  d5,  c5, a5s, f5, d5s, d5, d5s,  c5, R};
-int beats2[]  = {  21,  21, 21,  128,  128,   21,  21,  21, 128, 64,  21,  21,  21, 128, 64,  21, 21,  21, 128, 300 }; 
- 
-int MAX_COUNT1 = 37; // 
-int MAX_COUNT2 = 20; //
-long tempo = 11000;  //
-int pauses = 1000; //   distancia entres notas
-int rest_count = 50; //
-// Inicializando variables
-int toneM = 0,beat = 0,potVal = 0,i = 0;
-long duration  = 0;
-
-// PLAY TONE  //
-void playTone() {
-  long elapsed_time = 0;
-  if (toneM > 0) { // if this isn't a Rest beat, while the tone has 
-    //  played less long than 'duration', pulse speaker HIGH and LOW
-    while (elapsed_time < duration) {
-      digitalWrite(speakerOut,HIGH);
-      delayMicroseconds(toneM / 2);
-      // DOWN
-      digitalWrite(speakerOut, LOW);
-      delayMicroseconds(toneM / 2); 
-      // Keep track of how long we pulsed
-      elapsed_time += (toneM);
-    } 
-  }                         
-}
+int freq = 2000;
+int channel = 0;
+int resolution = 8;
 
 // Inicializando LittleFS
 void initFS() {
@@ -130,9 +67,10 @@ String processor(const String& var){
 }
 
 void setup() { 
-  pinMode(speakerOut, OUTPUT);
-  Serial.begin(115200); // Set serial out if we want debugging
 
+  Serial.begin(115200); // Set serial out if we want debugging
+  ledcSetup(channel, freq, resolution);
+  ledcAttachPin(18, channel);
   initWiFi();
   initFS();
 
@@ -154,61 +92,97 @@ void setup() {
   // Tecla 1
   server.on("/TECLA1", HTTP_GET, [](AsyncWebServerRequest *request){
     Serial.println("Tecla 1 presionada");
+    ledcWrite(channel, 125);
+    ledcWriteTone(channel, 261);
+    delay(1000);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   // Tecla 2
   server.on("/TECLA2", HTTP_GET, [](AsyncWebServerRequest *request){
     Serial.println("Tecla 2 presionada");
+    ledcWrite(channel, 125);
+    ledcWriteTone(channel, 277);
+    delay(1000);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   // Tecla 3
   server.on("/TECLA3", HTTP_GET, [](AsyncWebServerRequest *request){
     Serial.println("Tecla 3 presionada");
+    ledcWrite(channel, 125);
+    ledcWriteTone(channel, 293);
+    delay(1000);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   // Tecla 4
   server.on("/TECLA4", HTTP_GET, [](AsyncWebServerRequest *request){
     Serial.println("Tecla 4 presionada");
+    ledcWrite(channel, 125);
+    ledcWriteTone(channel, 311);
+    delay(1000);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   // Tecla 5
   server.on("/TECLA5", HTTP_GET, [](AsyncWebServerRequest *request){
     Serial.println("Tecla 5 presionada");
+    ledcWrite(channel, 125);
+    ledcWriteTone(channel, 329);
+    delay(1000);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   // Tecla 6
   server.on("/TECLA6", HTTP_GET, [](AsyncWebServerRequest *request){
     Serial.println("Tecla 6 presionada");
+    ledcWrite(channel, 125);
+    ledcWriteTone(channel, 349);
+    delay(1000);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   // Tecla 7
   server.on("/TECLA7", HTTP_GET, [](AsyncWebServerRequest *request){
     Serial.println("Tecla 7 presionada");
+    ledcWrite(channel, 125);
+    ledcWriteTone(channel, 369);
+    delay(1000);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   // Tecla 8
   server.on("/TECLA8", HTTP_GET, [](AsyncWebServerRequest *request){
     Serial.println("Tecla 8 presionada");
+    ledcWrite(channel, 125);
+    ledcWriteTone(channel, 392);
+    delay(1000);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   // Tecla 9
   server.on("/TECLA9", HTTP_GET, [](AsyncWebServerRequest *request){
     Serial.println("Tecla 9 presionada");
+    ledcWrite(channel, 125);
+    ledcWriteTone(channel, 415);
+    delay(1000);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   // Tecla 10
   server.on("/TECLA10", HTTP_GET, [](AsyncWebServerRequest *request){
     Serial.println("Tecla 10 presionada");
+    ledcWrite(channel, 125);
+    ledcWriteTone(channel, 440);
+    delay(1000);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   // Tecla 11
   server.on("/TECLA11", HTTP_GET, [](AsyncWebServerRequest *request){
     Serial.println("Tecla 11 presionada");
+    ledcWrite(channel, 125);
+    ledcWriteTone(channel, 466);
+    delay(1000);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   // Tecla 12
   server.on("/TECLA12", HTTP_GET, [](AsyncWebServerRequest *request){
     Serial.println("Tecla 12 presionada");
+    ledcWrite(channel, 125);
+    ledcWriteTone(channel, 493);
+    delay(1000);
     //request->send_P(200, "text/plain",getRSSI().c_str());
   });
   //-----------------------------------------------------------------
@@ -228,9 +202,10 @@ void setup() {
 } 
 
 void loop() {
-  potVal = analogRead(potPin); // Lectura del dato del ADC
+
   Serial.print("Lectura del ADC: ");
-  Serial.println(potVal);      // Print potVal en serial monitor
+
+  ledcWriteTone(channel, 2000);
   
   /*if (potVal < 2047) { // ADC menor a 2047 reproduce melodia 1
     for ( i=0; i<MAX_COUNT1; i++) {
